@@ -9,6 +9,11 @@ function($stateProvider, $urlRouterProvider){
             url: '/home',
             templateUrl: '/home.html',
             controller: 'MainCtrl',
+            resolve: {
+                postPromise: ['posts', function(posts){
+                    return posts.getAll();
+                }],
+            },
         })
         .state('post', {
             url: '/post/{id}',
@@ -19,17 +24,14 @@ function($stateProvider, $urlRouterProvider){
    $urlRouterProvider.otherwise('home');
 }])
 
-.factory('posts', [function(){
+.factory('posts', ['$http', function($http){
     var o = {
-        posts: [
-            {id: 0, title: 'post 1', link: 'one',   upvotes: 5,   comments: []},
-            {id: 1, title: 'post 2', link: '',      upvotes: 43,  comments: []},
-            {id: 2, title: 'post 3', link: 'three', upvotes: 300,
-                comments: [{author: 'Eric', body: 'hey', upvotes: 4},]
-            },
-            {id: 3, title: 'post 4', link: '',      upvotes: 12,  comments: []},
-            {id: 4, title: 'post 5', link: '',      upvotes: -10, comments: []},
-        ],
+        posts: [],
+        getAll: function() {
+            return $http.get('/posts').success(function(data){
+                angular.copy(data, o.posts);
+            });
+        },
     };
     return o;
 }])
