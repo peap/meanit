@@ -27,11 +27,27 @@ function($stateProvider, $urlRouterProvider){
 .factory('posts', ['$http', function($http){
     var o = {
         posts: [],
-        getAll: function() {
-            return $http.get('/posts').success(function(data){
-                angular.copy(data, o.posts);
-            });
-        },
+    };
+    o.getAll = function() {
+        return $http.get('/posts').success(function(data){
+            angular.copy(data, o.posts);
+        });
+    };
+    o.create = function(post) {
+        return $http.post('/posts', post).success(function(data){
+            o.posts.push(data);
+        });
+    };
+    o.downvote = function(post) {
+        return $http.put('/posts/' + post._id + '/downvote').success(function(data){
+            post.upvotes = data.upvotes;
+        });
+    };
+    o.upvote = function(post) {
+        return $http.put('/posts/' + post._id + '/upvote').success(function(data){
+            // duplicating logic in backend... could be wrong
+            post.upvotes = data.upvotes;
+        });
     };
     return o;
 }])
@@ -44,18 +60,20 @@ function($scope, posts){
     $scope.addPost = function(){
         var title = $scope.title;
         var link = $scope.link;
-        var id = posts.posts.length;
         if (title){
-            $scope.posts.push({id: id, title: title, link: link, upvotes: 0, comments: []});
+            posts.create({
+                title: title,
+                link: link,
+            });
             $scope.title = '';
             $scope.link = '';
         }
     };
     $scope.downvote = function(post){
-        post.upvotes -= 1;
+        posts.downvote(post);
     };
     $scope.upvote = function(post){
-        post.upvotes += 1;
+        posts.upvote(post);
     };
 }])
 
