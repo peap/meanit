@@ -6,10 +6,10 @@
     <title>meanit</title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.4/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
     <script src="app.js"></script>
 
   </head>
@@ -18,9 +18,7 @@
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
 
-        <div class="page-header">
-          <h1>meanit</h1>
-        </div>
+        <ui-view></ui-view>
 
         <form ng-submit="addPost()">
           <fieldset>
@@ -45,6 +43,12 @@
 
       </div>
     </div>
+
+    <script type="text/ng-template" id="/home.html">
+      <div class="page-header">
+        <h1>meanit</h1>
+      </div>
+    </script>
   </body>
 
 </html>
