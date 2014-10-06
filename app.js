@@ -10,6 +10,11 @@ function($stateProvider, $urlRouterProvider){
             templateUrl: '/home.html',
             controller: 'MainCtrl',
         })
+        .state('post', {
+            url: '/post/{id}',
+            templateUrl: '/post.html',
+            controller: 'PostCtrl',
+        })
     ;
    $urlRouterProvider.otherwise('home');
 }])
@@ -17,11 +22,13 @@ function($stateProvider, $urlRouterProvider){
 .factory('posts', [function(){
     var o = {
         posts: [
-            {title: 'post 1', link: 'one', upvotes: 5},
-            {title: 'post 2', link: '', upvotes: 43},
-            {title: 'post 3', link: 'three', upvotes: 300},
-            {title: 'post 4', link: '', upvotes: 12},
-            {title: 'post 5', link: '', upvotes: -10},
+            {id: 0, title: 'post 1', link: 'one',   upvotes: 5,   comments: []},
+            {id: 1, title: 'post 2', link: '',      upvotes: 43,  comments: []},
+            {id: 2, title: 'post 3', link: 'three', upvotes: 300,
+                comments: [{author: 'Eric', body: 'hey', upvotes: 4},]
+            },
+            {id: 3, title: 'post 4', link: '',      upvotes: 12,  comments: []},
+            {id: 4, title: 'post 5', link: '',      upvotes: -10, comments: []},
         ],
     };
     return o;
@@ -46,6 +53,20 @@ function($scope, posts){
     };
     $scope.upvote = function(post){
         post.upvotes += 1;
+    };
+}])
+
+.controller('PostCtrl', [
+'$scope',
+'$stateParams',
+'posts',
+function($scope, $stateParams, posts){
+    $scope.post = posts.posts[$stateParams.id];
+    $scope.downvote = function(comment){
+        comment.upvotes -= 1;
+    };
+    $scope.upvote = function(comment){
+        comment.upvotes += 1;
     };
 }])
 
