@@ -9,8 +9,9 @@
   </head>
 
   <body ng-app="meanit" ng-controller="MainCtrl">
-    <div>
-      {{test}}
+    <h1>meanit</h1>
+    <div ng-repeat="post in posts | orderBy: '-upvotes'">
+      {{post.title}} ({{post.upvotes}})
     </div>
   </body>
 
