@@ -10,11 +10,6 @@
 
   <body ng-app="meanit" ng-controller="MainCtrl">
     <h1>meanit</h1>
-    <div ng-repeat="post in posts | orderBy: '-upvotes'">
-      <button type="button" ng-click="downvote(post)">↓</button>
-      <button type="button" ng-click="upvote(post)">↑</button>
-      [{{post.upvotes}}] <a href="{{post.link}}">{{post.title}}</a>
-    </div>
     <form ng-submit="addPost()">
       <fieldset>
         <legend>New Post</legend>
@@ -29,6 +24,13 @@
         <button type="submit">Post</button>
       </fieldset>
     </form>
+    <div ng-repeat="post in posts | orderBy: '-upvotes'">
+      <button type="button" ng-click="downvote(post)">↓</button>
+      <button type="button" ng-click="upvote(post)">↑</button>
+      [{{post.upvotes}}]
+      <a ng-show="post.link" href="{{post.link}}">{{post.title}}</a>
+      <span ng-hide="post.link">{{post.title}}</span>
+    </div>
   </body>
 
 </html>
