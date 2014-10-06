@@ -6,3 +6,7 @@ body {
 a {
   color: #00B7FF;
 }
+
+.glyphicon-arrow-up, .glyphicon-arrow-down {
+    cursor: pointer;
+}
