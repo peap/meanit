@@ -42,8 +42,9 @@ function($scope, posts){
     $scope.addPost = function(){
         var title = $scope.title;
         var link = $scope.link;
+        var id = posts.posts.length;
         if (title){
-            $scope.posts.push({title: title, link: link, upvotes: 0});
+            $scope.posts.push({id: id, title: title, link: link, upvotes: 0, comments: []});
             $scope.title = '';
             $scope.link = '';
         }
