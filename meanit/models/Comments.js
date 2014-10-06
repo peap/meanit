@@ -10,12 +10,12 @@ var CommentSchema = new mongoose.Schema({
     },
 });
 
-CommentSchema.methods.downvote = function(obj) {
+CommentSchema.methods.downvote = function(cb) {
     this.upvotes -= 1;
     this.save(cb);
 };
 
-CommentSchema.methods.upvote = function(obj) {
+CommentSchema.methods.upvote = function(cb) {
     this.upvotes += 1;
     this.save(cb);
 };

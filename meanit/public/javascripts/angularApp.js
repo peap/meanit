@@ -19,6 +19,11 @@ function($stateProvider, $urlRouterProvider){
             url: '/post/{id}',
             templateUrl: '/post.html',
             controller: 'PostCtrl',
+            resolve: {
+                post: ['$stateParams', 'posts', function($stateParams, posts) {
+                    return posts.get($stateParams.id);
+                }],
+            },
         })
     ;
    $urlRouterProvider.otherwise('home');
@@ -47,6 +52,26 @@ function($stateProvider, $urlRouterProvider){
         return $http.put('/posts/' + post._id + '/upvote').success(function(data){
             // duplicating logic in backend... could be wrong
             post.upvotes = data.upvotes;
+        });
+    };
+    o.get = function(id) {
+        return $http.get('/posts/' + id).then(function(res){
+            return res.data;
+        });
+    };
+    o.addComment = function(id, comment) {
+        return $http.post('/posts/' + id + '/comments', comment);
+    };
+    o.downvoteComment = function(post, comment) {
+        var url = '/posts/' + post._id + '/comments/' + comment._id + '/downvote';
+        return $http.put(url).success(function(data){
+            comment.upvotes = data.upvotes;
+        });
+    };
+    o.upvoteComment = function(post, comment) {
+        var url = '/posts/' + post._id + '/comments/' + comment._id + '/upvote';
+        return $http.put(url).success(function(data){
+            comment.upvotes = data.upvotes;
         });
     };
     return o;
@@ -79,22 +104,24 @@ function($scope, posts){
 
 .controller('PostCtrl', [
 '$scope',
-'$stateParams',
 'posts',
-function($scope, $stateParams, posts){
-    $scope.post = posts.posts[$stateParams.id];
+'post',
+function($scope, posts, post){
+    $scope.post = post;
     $scope.downvote = function(comment){
-        comment.upvotes -= 1;
+        posts.downvoteComment(post, comment);
     };
     $scope.upvote = function(comment){
-        comment.upvotes += 1;
+        posts.upvoteComment(post, comment);
     };
     $scope.addComment = function(){
         if ($scope.body){
-            $scope.post.comments.push({
+            posts.addComment(post._id, {
                 body: $scope.body,
                 author: 'user',
                 upvotes: 0,
+            }).success(function(comment){
+                $scope.post.comments.push(comment);
             });
             $scope.body = '';
         }
